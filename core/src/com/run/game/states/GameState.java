@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Array;
 import com.run.game.Runner;
 import com.run.game.sprites.Player;
 import com.run.game.sprites.World;
@@ -13,7 +14,7 @@ public class GameState extends State {
 
     private World world;
     private Player player;
-    private WorldMiddle worldMiddle;
+    private Array<WorldMiddle> worldMiddle;
 
     public static final int BACK_MIDDLE_COUNT = 2;
 
@@ -24,7 +25,11 @@ public class GameState extends State {
         //test world
         world = new World("world_test");
         player = new Player(0, 0);
-        worldMiddle = new WorldMiddle(Runner.WIDTH / 2 - Runner.WIDTH);
+
+        worldMiddle = new Array<WorldMiddle>();
+
+        for(int i = 0; i < BACK_MIDDLE_COUNT; i++)
+            worldMiddle.add(new WorldMiddle(Runner.WIDTH / 2 - Runner.WIDTH + i * Runner.WIDTH));
     }
 
     @Override
@@ -37,12 +42,13 @@ public class GameState extends State {
     public void update(float delta) {
         handleInput();
         player.update(delta);
-        camera.position.x = player.getPosition().x;
+        camera.position.x = player.getPosition().x + 300;
 
         //camera.viewportWidth == Runner.WIDTH
-        if(camera.position.x - Runner.WIDTH / 2 > worldMiddle.getCoord().x
-                + worldMiddle.getBackMiddle().getWidth())
-            worldMiddle.reposition(worldMiddle.getCoord().x + Runner.WIDTH * BACK_MIDDLE_COUNT);//wm.getBackMiddle().getWidth() * BACK_MIDDLE_COUNT);
+        for (WorldMiddle wm : worldMiddle)
+            if (camera.position.x - Runner.WIDTH / 2 > wm.getCoord().x
+                    + Runner.WIDTH)
+                wm.reposition(wm.getCoord().x + Runner.WIDTH * BACK_MIDDLE_COUNT);//wm.getBackMiddle().getWidth() * BACK_MIDDLE_COUNT);
 
         camera.update();
     }
@@ -58,8 +64,9 @@ public class GameState extends State {
         //background
         sb.draw(world.getBackMain(), camera.position.x - camera.viewportWidth / 2, 0, width, height);
 
-        sb.draw(worldMiddle.getBackMiddle(), worldMiddle.getCoord().x, worldMiddle.getCoord().y, width, height);
-        sb.draw(worldMiddle.getBackMiddle(), 0, 0, Runner.WIDTH, 0, Runner.WIDTH, Runner.HEIGHT);
+        for(WorldMiddle wm : worldMiddle)
+            sb.draw(wm.getBackMiddle(), wm.getCoord().x, wm.getCoord().y, width, height);
+
         //player
         sb.draw(player.getPlayer(), player.getPosition().x, player.getPosition().y);
 
