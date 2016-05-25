@@ -9,22 +9,17 @@ import com.badlogic.gdx.math.Vector2;
 public class Player {
 
     public static final int MOVEMENT = 100;
-    public static final int GRAVITY = -15;
+    public static final int GRAVITY = -10;
 
     private Vector2 position;
     private Vector2 speed;
     private Texture player;
-
-    public boolean isOnTheGround;
-
 
 
     public Player(int x, int y) {
         position = new Vector2(x, y);
         speed = new Vector2(0, 0);
         player = new Texture("player.png");
-
-        isOnTheGround = true;
     }
 
     public void update(float delta) {
@@ -34,7 +29,6 @@ public class Player {
         speed.scl(delta);
 
         position.add(MOVEMENT * delta, speed.y);
-        speed.scl(1 / delta);
 
         if(position.y < 0)
             position.y = 0;
