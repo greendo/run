@@ -3,7 +3,6 @@ package com.run.game.sprites;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.run.game.Runner;
 
 /**
  * Created by jc on 25.05.16.
@@ -42,13 +41,18 @@ public class Player extends Objects {
             speed.y = 250;
     }
 
-    public void plat(boolean onPl) {
+    public void plat(boolean onPl, int h) {
         if(onPl) {
             gravity = 0;
             speed.y = 0;
         }
-        else
+        else if(position.y > h / 3)
             gravity = -7;
+        else {
+            gravity = -7;
+            if(speed.y == 0)
+                speed.y = -450;
+        }
     }
 
     public boolean collides(Rectangle platform) {return platform.overlaps(frame);}

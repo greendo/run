@@ -33,6 +33,7 @@ public class MenuState extends State {
 
     }
 
+    @Override
     public void render(SpriteBatch sb, BitmapFont font, int width, int height) {
         sb.begin();
         font.draw(sb, tmp, width / 2 - 10, height / 2);
