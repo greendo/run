@@ -27,7 +27,7 @@ public class GameState extends State {
 
         //test world
         world = new World("world_test");
-        player = new Player(0, 40);
+        player = new Player(0, Runner.HEIGHT / 3 + 10);
 
         worldMiddle = new Array<WorldMiddle>();
         worldPlatform = new Array<WorldPlatform>();
@@ -35,7 +35,8 @@ public class GameState extends State {
         for(int i = 0; i < BACK_MIDDLE_COUNT; i++)
             worldMiddle.add(new WorldMiddle(Runner.WIDTH / 2 - Runner.WIDTH + i * Runner.WIDTH));
         for(int i = 0; i < PLATFORMS_COUNT; i++)
-            worldPlatform.add(new WorldPlatform(Runner.WIDTH / 2 - Runner.WIDTH + i * Runner.WIDTH));
+            worldPlatform.add(new WorldPlatform((float) (Runner.WIDTH / 2 - Runner.WIDTH + i * Runner.WIDTH / 3+
+                        Math.random() * 60 + 20)));
     }
 
     @Override
@@ -56,15 +57,23 @@ public class GameState extends State {
 
         camera.position.x = player.getPosition().x + Runner.WIDTH / 3;
 
+        boolean onPl = false;
+
         //redraw when out of screen
         for(WorldMiddle wm : worldMiddle)
-            if (camera.position.x - Runner.WIDTH / 2 > wm.getPosition().x
+            if(camera.position.x - Runner.WIDTH / 2 > wm.getPosition().x
                     + Runner.WIDTH)
                 wm.reposition(wm.getPosition().x + Runner.WIDTH * BACK_MIDDLE_COUNT);//wm.getBackMiddle().getWidth() * BACK_MIDDLE_COUNT);
-        for(WorldPlatform wm : worldPlatform)
-            if (camera.position.x - Runner.WIDTH / 2 > wm.getPosition().x
+        for(WorldPlatform wm : worldPlatform) {
+            if(camera.position.x - Runner.WIDTH / 2 > wm.getPosition().x
                     + Runner.WIDTH)
                 wm.reposition(wm.getPosition().x + Runner.WIDTH * BACK_MIDDLE_COUNT);
+
+            if(player.collides(wm.getFrame()))
+                onPl = true;
+        }
+
+        player.plat(onPl);
 
         camera.update();
     }
@@ -83,7 +92,7 @@ public class GameState extends State {
         for(WorldMiddle wm : worldMiddle)
             sb.draw(wm.getTexture(), wm.getPosition().x, wm.getPosition().y, width, height);
         for(WorldPlatform wm : worldPlatform)
-            sb.draw(wm.getTexture(), wm.getPosition().x, wm.getPosition().y, wm.getTexture().getWidth(), Runner.HEIGHT / 3);
+            sb.draw(wm.getTexture(), wm.getPosition().x, wm.getPosition().y, Runner.WIDTH / 3, Runner.HEIGHT / 3);
 
         //player
         sb.draw(player.getTexture(), player.getPosition().x, player.getPosition().y);

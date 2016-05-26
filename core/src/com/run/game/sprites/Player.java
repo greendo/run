@@ -1,7 +1,9 @@
 package com.run.game.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.run.game.Runner;
 
 /**
  * Created by jc on 25.05.16.
@@ -9,18 +11,19 @@ import com.badlogic.gdx.math.Vector2;
 public class Player extends Objects {
 
     //public static final int MOVEMENT = 100;
-    public static final int GRAVITY = -10;
+    private int gravity = -7;
 
     public Player(int x, int y) {
         position = new Vector2(x, y);
         speed = new Vector2(0, 0);
         texture = new Texture("player.png");
+        frame = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
     }
 
     @Override
     public void update(float delta) {
         if(position.y > 0)
-            speed.add(0, GRAVITY);
+            speed.add(0, gravity);
 
         speed.scl(delta);
 
@@ -31,7 +34,22 @@ public class Player extends Objects {
             position.y = 0;
 
         speed.scl(1 / delta);
+        frame.setPosition(position);
     }
 
-    public void jump() {speed.y = 250;}
+    public void jump() {
+        if(gravity == 0)
+            speed.y = 250;
+    }
+
+    public void plat(boolean onPl) {
+        if(onPl) {
+            gravity = 0;
+            speed.y = 0;
+        }
+        else
+            gravity = -7;
+    }
+
+    public boolean collides(Rectangle platform) {return platform.overlaps(frame);}
 }
