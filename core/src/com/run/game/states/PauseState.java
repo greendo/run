@@ -1,5 +1,7 @@
 package com.run.game.states;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -8,27 +10,28 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 public class PauseState extends State {
 
-    public PauseState(StateManager sm) {
+    private GameState game;
+
+    public PauseState(StateManager sm, GameState game) {
         super(sm);
+        this.game = game;
     }
+
+    private GameState continueGame() {return game;}
 
     @Override
     protected void handleInput() {
-
+        if(Gdx.input.justTouched() || Gdx.input.isKeyPressed(Input.Keys.ANY_KEY))
+            continueGame();
     }
 
     @Override
     public void update(float delta) {
-
+        handleInput();
     }
 
     @Override
-    public void render(SpriteBatch sb) {
-
-    }
-
-    @Override
-    public void render(SpriteBatch sb, BitmapFont font, int width, int height) {
+    public void render(SpriteBatch sb, BitmapFont font) {
 
     }
 

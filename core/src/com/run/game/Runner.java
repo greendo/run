@@ -5,8 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
-import com.run.game.states.MenuState;
 import com.run.game.states.StateManager;
 
 /**
@@ -34,7 +32,6 @@ public class Runner extends ApplicationAdapter {
         Gdx.gl.glClearColor(1, 0, 0, 1);
 
         sm = new StateManager();
-        sm.push(new MenuState(sm));
     }
 
     @Override
@@ -43,6 +40,6 @@ public class Runner extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         sm.update(Gdx.graphics.getDeltaTime());
-        sm.render(batch, font, WIDTH, HEIGHT);
+        sm.render(batch, font);
     }
 }

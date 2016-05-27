@@ -3,46 +3,19 @@ package com.run.game.states;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import java.util.Stack;
-
 /**
  * Created by jc on 23.05.16.
  */
 public class StateManager {
 
-    private Stack<State> states;
+    private State state;
 
-    public StateManager() {
-        states = new Stack<State>();
-    }
+    public StateManager() {state = new MenuState(this);}
 
-    //screen to the top
-    public void push(State state) {
-        states.push(state);
-    }
+    public void init(State state) {this.state = state;}
 
-    //get upper screen and remove it from stack, clr mmr
-    public void pop() {
-        states.pop().dispose();
-    }
+    //draw scr
+    public void render(SpriteBatch sb, BitmapFont font) {state.render(sb, font);}
 
-    //rm upper screen and get next to up
-    public void set(State state) {
-        pop();
-        states.push(state);
-    }
-
-    //get upper screen, update it
-    public void update(float delta) {
-        states.peek().update(delta);
-    }
-
-    //draw upper scr
-    public void render(SpriteBatch sb) {
-        states.peek().render(sb);
-    }
-
-    public void render(SpriteBatch sb, BitmapFont font, int width, int height) {
-        states.peek().render(sb, font, width, height);
-    }
+    public void update(float delta) {state.update(delta);}
 }

@@ -27,22 +27,34 @@ public class GameState extends State {
 
         //test world
         world = new World("world_test");
-        player = new Player(0, Runner.HEIGHT / 2);
+        player = new Player(0, Runner.HEIGHT / 3 + 10);
 
         worldMiddle = new Array<WorldMiddle>();
         worldPlatform = new Array<WorldPlatform>();
 
+
+        int length = 0;
         for(int i = 0; i < BACK_MIDDLE_COUNT; i++)
             worldMiddle.add(new WorldMiddle(Runner.WIDTH / 2 - Runner.WIDTH + i * Runner.WIDTH));
-        for(int i = 0; i < PLATFORMS_COUNT; i++)
-            worldPlatform.add(new WorldPlatform((float) (Runner.WIDTH / 2 - Runner.WIDTH + i * 200 +
-                        Math.random() * 60 + 20)));
+        for(int i = 0; i < PLATFORMS_COUNT; i++) {
+            if (i != 0) {
+                length += worldPlatform.get(i - 1).getRandWidth();
+                worldPlatform.add(new WorldPlatform((float) (Runner.WIDTH / 2 - Runner.WIDTH +
+                        length +
+                        + i * 40)));
+            } else
+                worldPlatform.add(new WorldPlatform(0));
+        }
     }
+
+    private void pause() {sManager.init(new PauseState(sManager, this));}
 
     @Override
     protected void handleInput() {
-        if (Gdx.input.justTouched() || Gdx.input.isKeyPressed(Input.Keys.ANY_KEY))
+        if(Gdx.input.justTouched() || Gdx.input.isKeyPressed(Input.Keys.ANY_KEY))
             player.jump();
+        if(Gdx.input.isKeyPressed(Input.Keys.R))
+            sManager.init(new GameState(sManager));
     }
 
     @Override
@@ -80,8 +92,9 @@ public class GameState extends State {
 
 
     @Override
-    public void render(SpriteBatch sb, BitmapFont font, int x, int y) {
+    public void render(SpriteBatch sb, BitmapFont font) {
         sb.setProjectionMatrix(camera.combined);
+
         sb.begin();
 
         //background
@@ -90,16 +103,12 @@ public class GameState extends State {
         for(WorldMiddle wm : worldMiddle)
             sb.draw(wm.getTexture(), wm.getPosition().x, wm.getPosition().y, Runner.WIDTH, Runner.HEIGHT);
         for(WorldPlatform wm : worldPlatform)
-            sb.draw(wm.getTexture(), wm.getPosition().x, wm.getPosition().y, wm.getTexture().getWidth(), wm.getTexture().getHeight());//Runner.HEIGHT / 3);
+            sb.draw(wm.getTexture(), wm.getPosition().x, wm.getPosition().y, wm.getRandWidth(), Runner.HEIGHT / 3);
 
         //player
         sb.draw(player.getTexture(), player.getPosition().x, player.getPosition().y);
 
         sb.end();
-    }
-
-    @Override
-    public void render(SpriteBatch sb) {
     }
 
     @Override

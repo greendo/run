@@ -41,6 +41,8 @@ public class Player extends Objects {
             speed.y = 250;
     }
 
+    public void debugGetUp(int h) {position.y = h;}
+
     public void plat(boolean onPl, int h) {
         if(onPl) {
             gravity = 0;

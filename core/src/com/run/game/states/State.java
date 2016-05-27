@@ -25,8 +25,7 @@ public abstract class State {
     //update screen
     public abstract void update(float delta);
     //draw
-    public abstract void render(SpriteBatch sb);
-    public abstract void render(SpriteBatch sb, BitmapFont font, int width, int height);
+    public abstract void render(SpriteBatch sb, BitmapFont font);
     //free mmr
     public abstract void dispose();
 }
