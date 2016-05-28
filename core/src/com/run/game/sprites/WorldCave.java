@@ -1,5 +1,6 @@
 package com.run.game.sprites;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.run.game.Runner;
@@ -10,12 +11,15 @@ import com.run.game.Runner;
 public class WorldCave extends Worlds {
 
     private Texture ceiling;
-    public Texture getCeiling() {return ceiling;}
 
-    public WorldCave(String worldName) {super(worldName);}
+    public WorldCave(String worldName) {
+        super(worldName);
+        ceiling = new Texture(this.worldName + "/ceiling1.png");
+    }
 
     @Override
-    public void utilityDrawings(SpriteBatch sb) {
-        sb.draw(ceiling, 0, Runner.WIDTH - 129, Runner.WIDTH, Runner.HEIGHT / 5);
+    public void utilityDrawings(SpriteBatch sb, OrthographicCamera camera) {
+        sb.draw(ceiling, camera.position.x - camera.viewportWidth / 2,
+                Runner.HEIGHT - 129, Runner.WIDTH, Runner.HEIGHT / 5);
     }
 }

@@ -25,9 +25,7 @@ public class MenuState extends State {
     }
 
     @Override
-    public void update(float delta) {
-        handleInput();
-    }
+    public void update(float delta) {handleInput();}
 
     @Override
     public void render(SpriteBatch sb, BitmapFont font) {
@@ -37,7 +35,5 @@ public class MenuState extends State {
     }
 
     @Override
-    public void dispose() {
-
-    }
+    public void dispose() {}
 }

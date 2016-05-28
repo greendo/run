@@ -42,4 +42,9 @@ public class Runner extends ApplicationAdapter {
         sm.update(Gdx.graphics.getDeltaTime());
         sm.render(batch, font);
     }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+    }
 }

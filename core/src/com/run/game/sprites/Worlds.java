@@ -1,5 +1,6 @@
 package com.run.game.sprites;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -15,7 +16,7 @@ public abstract class Worlds {
     protected static Texture backMain;
 
     public static Texture getBackMain() {return backMain;}
-    public abstract void utilityDrawings(SpriteBatch sb);
+    public abstract void utilityDrawings(SpriteBatch sb, OrthographicCamera camera);
 
     public Worlds(String worldName) {
         this.worldName = worldName;

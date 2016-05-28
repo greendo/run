@@ -7,43 +7,43 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 import com.run.game.Runner;
 import com.run.game.sprites.Player;
-import com.run.game.sprites.World;
-import com.run.game.sprites.WorldMiddle;
-import com.run.game.sprites.WorldPlatform;
+import com.run.game.sprites.WorldCave;
+import com.run.game.sprites.Worlds;
 
 public class GameState extends State {
 
-    private World world;
+    private Worlds world;
     private Player player;
-    private Array<WorldMiddle> worldMiddle;
-    private Array<WorldPlatform> worldPlatform;
+    private Array<Worlds.WorldMiddle> worldMiddle;
+    private Array<Worlds.WorldPlatform> worldPlatform;
 
     public static final int BACK_MIDDLE_COUNT = 2;
-    public static final int PLATFORMS_COUNT = 6;
+    public static final int PLATFORMS_COUNT = 5;
 
     public GameState(StateManager sm) {
         super(sm);
         camera.setToOrtho(false, Runner.WIDTH, Runner.HEIGHT);
 
         //test world
-        world = new World("world_test");
+        world = new WorldCave("WorldCave");
         player = new Player(0, Runner.HEIGHT / 3 + 10);
 
-        worldMiddle = new Array<WorldMiddle>();
-        worldPlatform = new Array<WorldPlatform>();
+        worldMiddle = new Array<Worlds.WorldMiddle>();
+        worldPlatform = new Array<Worlds.WorldPlatform>();
 
+
+        for(int i = 0; i < BACK_MIDDLE_COUNT; i++)
+            worldMiddle.add(world.new WorldMiddle(Runner.WIDTH / 2 - Runner.WIDTH + i * Runner.WIDTH));
 
         int length = 0;
-        for(int i = 0; i < BACK_MIDDLE_COUNT; i++)
-            worldMiddle.add(new WorldMiddle(Runner.WIDTH / 2 - Runner.WIDTH + i * Runner.WIDTH));
+        int distance = 0;
         for(int i = 0; i < PLATFORMS_COUNT; i++) {
             if (i != 0) {
                 length += worldPlatform.get(i - 1).getRandWidth();
-                worldPlatform.add(new WorldPlatform((float) (Runner.WIDTH / 2 - Runner.WIDTH +
-                        length +
-                        + i * 40)));
+                distance += worldPlatform.get(i - 1).getDistance();
+                worldPlatform.add(world.new WorldPlatform((float) (length + distance)));
             } else
-                worldPlatform.add(new WorldPlatform(0));
+                worldPlatform.add(world.new WorldPlatform(0));
         }
     }
 
@@ -62,9 +62,9 @@ public class GameState extends State {
         handleInput();
 
         player.update(delta);
-        for(WorldMiddle wm : worldMiddle)
+        for(Worlds.WorldMiddle wm : worldMiddle)
             wm.update(delta);
-        for(WorldPlatform wm : worldPlatform)
+        for(Worlds.WorldPlatform wm : worldPlatform)
             wm.update(delta);
 
         camera.position.x = player.getPosition().x + Runner.WIDTH / 3;
@@ -72,11 +72,12 @@ public class GameState extends State {
         boolean onPl = false;
 
         //redraw when out of screen
-        for(WorldMiddle wm : worldMiddle)
+        for(Worlds.WorldMiddle wm : worldMiddle)
             if(camera.position.x - Runner.WIDTH / 2 > wm.getPosition().x
                     + Runner.WIDTH)
-                wm.reposition(wm.getPosition().x + Runner.WIDTH * BACK_MIDDLE_COUNT);//wm.getBackMiddle().getWidth() * BACK_MIDDLE_COUNT);
-        for(WorldPlatform wm : worldPlatform) {
+                wm.reposition(wm.getPosition().x + Runner.WIDTH * BACK_MIDDLE_COUNT);
+
+        for(Worlds.WorldPlatform wm : worldPlatform) {
             if(camera.position.x - Runner.WIDTH / 2 > wm.getPosition().x
                     + Runner.WIDTH)
                 wm.reposition(wm.getPosition().x + Runner.WIDTH * BACK_MIDDLE_COUNT);
@@ -86,6 +87,10 @@ public class GameState extends State {
         }
 
         player.plat(onPl, Runner.HEIGHT);
+
+        //check if dead
+        if(player.getPosition().y <= 0)
+            sManager.init(new DeathState(sManager));
 
         camera.update();
     }
@@ -99,11 +104,15 @@ public class GameState extends State {
 
         //background
         sb.draw(world.getBackMain(), camera.position.x - camera.viewportWidth / 2, 0, Runner.WIDTH, Runner.HEIGHT);
+        world.utilityDrawings(sb, camera);
 
-        for(WorldMiddle wm : worldMiddle)
+        for(Worlds.WorldMiddle wm : worldMiddle)
             sb.draw(wm.getTexture(), wm.getPosition().x, wm.getPosition().y, Runner.WIDTH, Runner.HEIGHT);
-        for(WorldPlatform wm : worldPlatform)
+        for(Worlds.WorldPlatform wm : worldPlatform)
             sb.draw(wm.getTexture(), wm.getPosition().x, wm.getPosition().y, wm.getRandWidth(), Runner.HEIGHT / 3);
+
+        for(int i = 0; i < PLATFORMS_COUNT; i++)
+            font.draw(sb, "count = " + i, worldPlatform.get(i).getPosition().x, 30);
 
         //player
         sb.draw(player.getTexture(), player.getPosition().x, player.getPosition().y);
@@ -113,6 +122,11 @@ public class GameState extends State {
 
     @Override
     public void dispose() {
-
+        world.getBackMain().dispose();
+        player.getTexture().dispose();
+        for(Worlds.WorldMiddle wm : worldMiddle)
+            wm.getTexture().dispose();
+        for(Worlds.WorldPlatform wm : worldPlatform)
+            wm.getTexture().dispose();
     }
 }
