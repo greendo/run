@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.run.game.Runner;
-import com.sun.prism.RenderTarget;
 
 /**
  * Created by jc on 28.05.16.

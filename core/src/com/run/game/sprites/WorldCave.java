@@ -20,6 +20,6 @@ public class WorldCave extends Worlds {
     @Override
     public void utilityDrawings(SpriteBatch sb, OrthographicCamera camera) {
         sb.draw(ceiling, camera.position.x - camera.viewportWidth / 2,
-                Runner.HEIGHT - 129, Runner.WIDTH, Runner.HEIGHT / 5);
+                Runner.HEIGHT - Runner.HEIGHT / 5, Runner.WIDTH, Runner.HEIGHT / 5);
     }
 }

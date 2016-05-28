@@ -146,7 +146,10 @@ public class GameState extends State {
         player.getTexture().dispose();
         for(Worlds.WorldMiddle wm : worldMiddle)
             wm.getTexture().dispose();
-        for(Worlds.WorldPlatform wm : worldPlatform)
+        for(Worlds.WorldPlatform wm : worldPlatform) {
             wm.getTexture().dispose();
+            wm.getWallLeft().getTexture().dispose();
+            wm.getWallRight().getTexture().dispose();
+        }
     }
 }
