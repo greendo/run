@@ -18,7 +18,7 @@ public class GameState extends State {
     private Array<Worlds.WorldPlatform> worldPlatform;
 
     public static final int BACK_MIDDLE_COUNT = 2;
-    public static final int PLATFORMS_COUNT = 5;
+    public static final int PLATFORMS_COUNT = 6;
 
     public GameState(StateManager sm) {
         super(sm);
@@ -108,16 +108,36 @@ public class GameState extends State {
 
         for(Worlds.WorldMiddle wm : worldMiddle)
             sb.draw(wm.getTexture(), wm.getPosition().x, wm.getPosition().y, Runner.WIDTH, Runner.HEIGHT);
-        for(Worlds.WorldPlatform wm : worldPlatform)
+        for(Worlds.WorldPlatform wm : worldPlatform) {
             sb.draw(wm.getTexture(), wm.getPosition().x, wm.getPosition().y, wm.getRandWidth(), Runner.HEIGHT / 3);
 
-        for(int i = 0; i < PLATFORMS_COUNT; i++)
-            font.draw(sb, "count = " + i, worldPlatform.get(i).getPosition().x, 30);
+            sb.draw(wm.getWallLeft(),
+                    wm.getPosition().x - wm.getWallLeft().getRegionWidth() / 3 + 25,
+                    wm.getPosition().y,
+                    wm.getWallLeft().getRegionWidth() / 2,
+                    Runner.HEIGHT / 3);
+
+            sb.draw(wm.getWallRight(),
+                    wm.getPosition().x + wm.getRandWidth(),
+                    wm.getPosition().y,
+                    wm.getWallRight().getRegionWidth() / 2,
+                    Runner.HEIGHT / 3);
+        }
+
+        debug(sb, font);
 
         //player
         sb.draw(player.getTexture(), player.getPosition().x, player.getPosition().y);
 
         sb.end();
+    }
+
+    private void debug(SpriteBatch sb, BitmapFont font) {
+        for(int i = 0; i < PLATFORMS_COUNT; i++)
+            font.draw(sb, "count = " + i, worldPlatform.get(i).getPosition().x, 30);
+        font.draw(sb, "speed boost in: " + (5 - player.getTime()), player.getPosition().x + 200, Runner.HEIGHT / 2);
+        font.draw(sb, "total time passed: " + player.getTimeTotal(), player.getPosition().x + 200, Runner.HEIGHT / 2 - 15);
+        font.draw(sb, "current speed: " + player.getSpeed(), player.getPosition().x + 200, Runner.HEIGHT / 2 - 30);
     }
 
     @Override

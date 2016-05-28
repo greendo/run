@@ -18,6 +18,7 @@ public abstract class Objects {
     public Texture getTexture() {return texture;}
     public Rectangle getFrame() {return frame;}
     public void reposition(float x) {position.set(x, 0);}
+    public float getSpeed() {return speed.x;}
 
     public abstract void update(float delta);
 }

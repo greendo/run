@@ -9,9 +9,14 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class Player extends Objects {
 
-    private int path = 0;
-    private int speedX = 0;
+    private float timeTotal = 0;
+    private float time = 0;
     private int gravity = -15;
+
+    public static final int STOP_SPD = 2000;
+
+    public float getTime() {return time;}
+    public float getTimeTotal() {return timeTotal;}
 
     public Player(int x, int y) {
         position = new Vector2(x, y);
@@ -28,7 +33,17 @@ public class Player extends Objects {
         speed.scl(delta);
 
         //position.add(MOVEMENT * delta, speed.y);
-        position.add(0, speed.y);
+        position.add(speed.x * delta, speed.y);
+
+        if(time < 5) {
+            time += delta;
+            timeTotal += delta;
+        }
+        else {
+            if(speed.x < STOP_SPD)
+                speed.x += 20;
+            time = 0;
+        }
 
         speed.scl(1 / delta);
         frame.setPosition(position);
@@ -36,7 +51,7 @@ public class Player extends Objects {
 
     public void jump() {
         if(gravity == 0)
-            speed.y = 300;
+            speed.y = 340;
     }
 
     public void plat(boolean onPl, int h) {
