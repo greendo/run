@@ -13,6 +13,11 @@ public class Player extends Objects {
     private float time = 0;
     private int gravity = -15;
 
+    //GRAVITY CONSTANT
+    public static final int DEF_GRAV = -15;
+    //ACCELERATION CONSTANT
+    public static final int DEF_ACC = 20;
+    //STOP SPEED AT
     public static final int STOP_SPD = 2000;
 
     public float getTime() {return time;}
@@ -41,7 +46,7 @@ public class Player extends Objects {
         }
         else {
             if(speed.x < STOP_SPD)
-                speed.x += 20;
+                speed.x += DEF_ACC;
             time = 0;
         }
 
@@ -58,12 +63,12 @@ public class Player extends Objects {
         if(onPl) {
             gravity = 0;
             speed.y = 0;
-            position.y = h / 3 - 17;
+            position.y = h / 4 - 17;
         }
-        else if(position.y > h / 3)
-            gravity = -15;
+        else if(position.y > h / 4)
+            gravity = DEF_GRAV;
         else {
-            gravity = -15;
+            gravity = DEF_GRAV;
             if(speed.y == 0)
                 speed.y = -450;
         }

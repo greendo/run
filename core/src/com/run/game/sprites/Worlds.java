@@ -2,10 +2,12 @@ package com.run.game.sprites;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.run.game.Runner;
 
 /**
@@ -15,13 +17,25 @@ public abstract class Worlds {
 
     protected static String worldName;
     protected static Texture backMain;
+    protected static boolean debug;
+
+    protected Array<WorldMiddle> worldMiddle;
+    protected Array<Worlds.WorldPlatform> worldPlatform;
+
+    public static final int BACK_MIDDLE_COUNT = 2;
+    public static final int PLATFORMS_COUNT = 6;
 
     public static Texture getBackMain() {return backMain;}
-    public abstract void utilityDrawings(SpriteBatch sb, OrthographicCamera camera);
 
-    public Worlds(String worldName) {
+    public abstract boolean update(float delta, Player player, OrthographicCamera camera);
+    public abstract void render(SpriteBatch sb, BitmapFont font, OrthographicCamera camera, Player player);
+    public abstract void debug(SpriteBatch sb, BitmapFont font, Player player);
+    public abstract void dispose();
+
+    public Worlds(String worldName, boolean debug) {
         this.worldName = worldName;
         backMain = new Texture(this.worldName + "/back1.png");
+        this.debug = debug;
     }
 
     public class WorldMiddle extends Objects {
@@ -61,7 +75,7 @@ public abstract class Worlds {
 
             distance = (int) (Math.random() * 90 + 70);
 
-            frame = new Rectangle(x + GAP, Runner.HEIGHT / 3 - 15,
+            frame = new Rectangle(x + GAP, Runner.HEIGHT / 4 - 15,
                     randWidth - 2 * GAP, 1);
 
             Texture valera = new Texture(worldName + "/wall1.png");
@@ -73,7 +87,7 @@ public abstract class Worlds {
         @Override
         public void update(float delta) {
             position.add(MOVEMENT * delta, speed.y);
-            frame.setPosition(position.x + GAP, Runner.HEIGHT / 3 - 15);
+            frame.setPosition(position.x + GAP, Runner.HEIGHT / 4 - 15);
         }
     }
 }
