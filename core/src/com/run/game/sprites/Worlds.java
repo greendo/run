@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.run.game.Runner;
 
+import java.util.Random;
+
 /**
  * Created by jc on 28.05.16.
  */
@@ -24,6 +26,7 @@ public abstract class Worlds {
 
     public static final int BACK_MIDDLE_COUNT = 2;
     public static final int PLATFORMS_COUNT = 6;
+    public Random rand;
 
     public static Texture getBackMain() {return backMain;}
 
@@ -36,6 +39,7 @@ public abstract class Worlds {
         this.worldName = worldName;
         backMain = new Texture(this.worldName + "/back1.png");
         this.debug = debug;
+        rand = new Random();
     }
 
     public class WorldMiddle extends Objects {
@@ -71,9 +75,9 @@ public abstract class Worlds {
             position = new Vector2(x, 0);
             speed = new Vector2(0, 0);
 
-            randWidth = (float) Math.random() * (Runner.WIDTH / 2) + 200;
+            randWidth = rand.nextInt(Runner.WIDTH / 2 - 200) + 200;
 
-            distance = (int) (Math.random() * 90 + 70);
+            distance = rand.nextInt(85) + 70;
 
             frame = new Rectangle(x + GAP, Runner.HEIGHT / 4 - 15,
                     randWidth - 2 * GAP, 1);
