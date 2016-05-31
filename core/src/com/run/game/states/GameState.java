@@ -7,20 +7,42 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.run.game.ActionController;
 import com.run.game.Runner;
 import com.run.game.sprites.Player;
-import com.run.game.sprites.WorldCave;
+
 import com.run.game.sprites.Worlds;
+import com.run.game.sprites.Morning;
+import com.run.game.sprites.Day;
+import com.run.game.sprites.Evening;
+import com.run.game.sprites.Night;
+
+import java.util.Random;
 
 public class GameState extends State {
 
     private Worlds world;
     private Player player;
+    private boolean debug = true;
+    private Random rand = new Random();
 
     public GameState(StateManager sm) {
         super(sm);
         camera.setToOrtho(false, Runner.WIDTH, Runner.HEIGHT);
 
-        //test world
-        world = new WorldCave("Night", true);
+        //world
+        switch(rand.nextInt(4)) {
+            case 0:
+                world = new Morning(debug);
+                break;
+            case 1:
+                world = new Day(debug);
+                break;
+            case 2:
+                world = new Evening(debug);
+                break;
+            case 3:
+                world = new Night(debug);
+                break;
+        }
+
         player = new Player(0, Runner.HEIGHT / 3 + 10);
 
         //for swipes
@@ -46,6 +68,10 @@ public class GameState extends State {
 
             }
         }, player));
+    }
+
+    public int getRand(int min, int max) {
+        return rand.nextInt(max) + min;
     }
 
     private void pause() {sManager.init(new PauseState(sManager, this));}

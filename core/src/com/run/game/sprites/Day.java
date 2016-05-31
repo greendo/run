@@ -5,121 +5,38 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.run.game.Runner;
 
-import java.util.Random;
-
 /**
- * Created by jc on 28.05.16.
+ * Created by jc on 31.05.16.
  */
-public class WorldCave extends Worlds {
+public class Day extends Worlds {
 
-    private Array<Ceiling> ceiling;
-    private Array<UpperThings> upperThingsOne;
-    private Array<UpperThings> upperThingsTwo;
+    Clouds cloud;
 
-    public WorldCave(String worldName, boolean debug) {
-        super(worldName, debug);
-
-        ceiling = new Array<>();
-        worldMiddle = new Array<>();
-        worldPlatform = new Array<>();
-        upperThingsOne = new Array<>();
-        upperThingsTwo = new Array<>();
-
-        for (int i = 0; i < BACK_MIDDLE_COUNT; i++)
-            worldMiddle.add(new WorldMiddle(Runner.WIDTH / 2 - Runner.WIDTH + i * Runner.WIDTH));
-
-        for (int i = 0; i < BACK_MIDDLE_COUNT; i++)
-            ceiling.add(new Ceiling(Runner.WIDTH / 2 - Runner.WIDTH + i * Runner.WIDTH));
-
-        int container = Runner.WIDTH;
-        int y = 0;
-        int length = 0;
-        int distance = 0;
-        while(container > 0) {
-            if(y != 0) {
-                length += upperThingsOne.get(y - 1).getTexture().getWidth();
-                distance += upperThingsOne.get(y - 1).getDistance();
-                upperThingsOne.add(new UpperThings(length + distance));
-            }
-            else
-                upperThingsOne.add(new UpperThings(0));
-            y++;
-            container -= (length + distance);
-        }
-
-        container = Runner.WIDTH;
-        y = 0;
-        length = 0;
-        distance = 0;
-        while(container > 0) {
-            if(y != 0) {
-                length += upperThingsTwo.get(y - 1).getTexture().getWidth();
-                distance += upperThingsTwo.get(y - 1).getDistance();
-                upperThingsTwo.add(new UpperThings(length + distance + Runner.WIDTH));
-            }
-            else
-                upperThingsTwo.add(new UpperThings(Runner.WIDTH));
-            y++;
-            container -= (length + distance);
-        }
-
-        length = 0;
-        distance = 0;
-        for (int i = 0; i < PLATFORMS_COUNT; i++) {
-            if (i != 0) {
-                length += worldPlatform.get(i - 1).getRandWidth();
-                distance += worldPlatform.get(i - 1).getDistance();
-                worldPlatform.add(new WorldPlatform((float) (length + distance)));
-            }
-            else
-                worldPlatform.add(new WorldPlatform(0));
-        }
+    public Day(boolean debug) {
+        super(debug, "Day");
+        cloud = new Clouds(50);
     }
 
-    public class Ceiling extends Objects {
+    public class Clouds extends Objects {
 
-        public static final int MOVEMENT = -200;
+        public static final int MOVEMENT = -3;
 
-        public Ceiling(float x) {
-            texture = new Texture(worldName + "/ceiling1.png");
-            position = new Vector2(x, Runner.HEIGHT - Runner.HEIGHT / 5);
+        public Clouds(float x) {
+            texture = new Texture(worldName + "/cloud" + (rand.nextInt(4) + 1) + ".png");
+            position = new Vector2(x, Runner.HEIGHT / 2 + Runner.HEIGHT / 5);
             speed = new Vector2(0, 0);
         }
 
         @Override
-        public void update(float delta) {
-            position.add(MOVEMENT * delta, speed.y);
-        }
+        public void update(float delta) {position.add(MOVEMENT * delta, speed.y);}
 
         public void reposition(float x, float y) {
             position.set(x, y);
         }
     }
 
-    public class UpperThings extends Objects {
-
-        private int distance;
-        public static final int MOVEMENT = -200;
-
-        public UpperThings(float x) {
-            texture = new Texture(worldName + "/upper" +
-                    (rand.nextInt(8) + 1) + ".png");
-            position = new Vector2(x, Runner.HEIGHT - Runner.HEIGHT / 5 -
-                    texture.getHeight() + 15);
-            speed = new Vector2(0, 0);
-            distance = rand.nextInt(80) + 40;
-        }
-
-        @Override
-        public void update(float delta) {position.add(MOVEMENT * delta, speed.y);}
-        public void reposition(float x, float y) {position.set(x, y);}
-        public int getDistance() {return distance;}
-    }
-
-    @Override
     public boolean update(float delta, Player player, OrthographicCamera camera) {
 
         player.update(delta);
@@ -134,6 +51,7 @@ public class WorldCave extends Worlds {
             u.update(delta);
         for(UpperThings u : upperThingsTwo)
             u.update(delta);
+        cloud.update(delta);
 
         camera.position.x = player.getPosition().x + Runner.WIDTH / 3;
 
@@ -172,6 +90,11 @@ public class WorldCave extends Worlds {
                 onPl = true;
         }
 
+        if (camera.position.x - Runner.WIDTH / 2 > cloud.getPosition().x
+                + Runner.WIDTH)
+            cloud.reposition(cloud.getPosition().x + Runner.WIDTH * BACK_MIDDLE_COUNT,
+                    Runner.HEIGHT / 2 + Runner.HEIGHT / 5);
+
         player.plat(onPl, Runner.HEIGHT);
 
         //check if dead
@@ -181,17 +104,12 @@ public class WorldCave extends Worlds {
         return false;
     }
 
-    @Override
     public void render(SpriteBatch sb, BitmapFont font, OrthographicCamera camera, Player player) {        //background
         sb.draw(getBackMain(), camera.position.x - camera.viewportWidth / 2, 0, Runner.WIDTH, Runner.HEIGHT);
 
-        //unique textures for cave world////////////////////////////////////////////////////////////
-        for (Ceiling c : ceiling)
-            sb.draw(c.getTexture(), c.getPosition().x, c.getPosition().y, Runner.WIDTH, Runner.HEIGHT / 5);
-        //unique textures for cave world////////////////////////////////////////////////////////////
-
         for (Worlds.WorldMiddle wm : worldMiddle)
             sb.draw(wm.getTexture(), wm.getPosition().x, wm.getPosition().y, Runner.WIDTH, Runner.HEIGHT);
+
         for (Worlds.WorldPlatform wm : worldPlatform) {
             sb.draw(wm.getTexture(), wm.getPosition().x, wm.getPosition().y, wm.getRandWidth(), Runner.HEIGHT / 4);
 
@@ -209,6 +127,13 @@ public class WorldCave extends Worlds {
         }
 
         //unique textures for cave world////////////////////////////////////////////////////////////
+        sb.draw(cloud.getTexture(), cloud.getPosition().x, cloud.getPosition().y);
+
+        //unique textures for cave world////////////////////////////////////////////////////////////
+        for (Ceiling c : ceiling)
+            sb.draw(c.getTexture(), c.getPosition().x, c.getPosition().y, Runner.WIDTH, Runner.HEIGHT / 5);
+        //unique textures for cave world////////////////////////////////////////////////////////////
+
         for (UpperThings u : upperThingsOne)
             sb.draw(u.getTexture(), u.getPosition().x, u.getPosition().y);
         for (UpperThings u : upperThingsTwo)
@@ -219,7 +144,6 @@ public class WorldCave extends Worlds {
             debug(sb, font, player);
     }
 
-    @Override
     public void debug(SpriteBatch sb, BitmapFont font, Player player) {
         for(int i = 0; i < PLATFORMS_COUNT; i++)
             font.draw(sb, "count = " + i, worldPlatform.get(i).getPosition().x, 30);
@@ -229,7 +153,6 @@ public class WorldCave extends Worlds {
 
     }
 
-    @Override
     public void dispose() {
         getBackMain().dispose();
         for (Worlds.WorldMiddle wm : worldMiddle)
@@ -242,8 +165,9 @@ public class WorldCave extends Worlds {
         for (Ceiling c : ceiling)
             c.getTexture().dispose();
         for(UpperThings u : upperThingsOne)
-                u.getTexture().dispose();
+            u.getTexture().dispose();
         for(UpperThings u : upperThingsTwo)
             u.getTexture().dispose();
+        cloud.getTexture().dispose();
     }
 }
