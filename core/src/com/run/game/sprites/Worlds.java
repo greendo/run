@@ -20,13 +20,13 @@ public abstract class Worlds {
     protected static String worldName;
     protected static Texture backMain;
     protected static boolean debug;
+    protected Random rand;
 
     protected Array<WorldMiddle> worldMiddle;
     protected Array<Worlds.WorldPlatform> worldPlatform;
 
     public static final int BACK_MIDDLE_COUNT = 2;
     public static final int PLATFORMS_COUNT = 6;
-    public Random rand;
 
     public static Texture getBackMain() {return backMain;}
 

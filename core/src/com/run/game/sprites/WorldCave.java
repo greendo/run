@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.run.game.Runner;
 
+import java.util.Random;
+
 /**
  * Created by jc on 28.05.16.
  */

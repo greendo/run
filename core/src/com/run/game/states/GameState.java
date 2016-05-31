@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.run.game.ActionController;
 import com.run.game.Runner;
 import com.run.game.sprites.Player;
 import com.run.game.sprites.WorldCave;
@@ -19,8 +20,32 @@ public class GameState extends State {
         camera.setToOrtho(false, Runner.WIDTH, Runner.HEIGHT);
 
         //test world
-        world = new WorldCave("WorldCave", true);
+        world = new WorldCave("Night", true);
         player = new Player(0, Runner.HEIGHT / 3 + 10);
+
+        //for swipes
+        Gdx.input.setInputProcessor(new ActionController(new ActionController.DirectionListener() {
+
+            @Override
+            public void onLeft() {
+
+            }
+
+            @Override
+            public void onRight() {
+
+            }
+
+            @Override
+            public void onUp() {
+                player.jump();
+            }
+
+            @Override
+            public void onDown() {
+
+            }
+        }, player));
     }
 
     private void pause() {sManager.init(new PauseState(sManager, this));}
@@ -29,8 +54,8 @@ public class GameState extends State {
     protected void handleInput() {
         if(Gdx.input.isKeyPressed(Input.Keys.R))
             sManager.init(new GameState(sManager));
-        if(Gdx.input.justTouched() || Gdx.input.isKeyPressed(Input.Keys.ANY_KEY))
-            player.jump();
+//        if(Gdx.input.justTouched() || Gdx.input.isKeyPressed(Input.Keys.ANY_KEY))
+//            player.jump();
     }
 
     @Override
