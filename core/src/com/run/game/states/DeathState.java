@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector3;
 import com.run.game.Runner;
 
 /**
@@ -38,6 +37,22 @@ public class DeathState extends State {
         sb.begin();
         font.draw(sb, tmp, Runner.WIDTH / 2 - 15, Runner.HEIGHT / 2);
         sb.end();
+
+//        Texture texture = new Texture(Gdx.files.internal("image.png"));
+//        TextureRegion region = new TextureRegion(texture, 20, 20, 50, 50);
+//        Sprite sprite = new Sprite(texture, 20, 20, 50, 50);
+//        sprite.setPosition(100, 10);
+//        sprite.setColor(0, 0, 1, 1);
+//
+//        SpriteBatch batch = sb;
+//
+//        batch.begin();
+//        batch.setColor(0, 1, 0, 1);
+//        batch.draw(region, 50, 10);
+//        batch.setColor(255, 0, 0, 100);
+//        batch.draw(texture, 10, 10);
+//        sprite.draw(batch);
+//        batch.end();
     }
 
     @Override

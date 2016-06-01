@@ -13,12 +13,14 @@ public class Player extends Objects {
     private float time = 0;
     private int gravity = -15;
 
-    //GRAVITY CONSTANT
+    /** GRAVITY CONSTANT */
     public static final int DEF_GRAV = -15;
-    //ACCELERATION CONSTANT
+    /** ACCELERATION CONSTANT */
     public static final int DEF_ACC = 20;
-    //STOP SPEED AT
+    /** STOP SPEED AT */
     public static final int STOP_SPD = 2000;
+    /** JUMP SPEED Oy */
+    public static final int JUMP_SPD = 340;
 
     public float getTime() {return time;}
     public float getTimeTotal() {return timeTotal;}
@@ -56,8 +58,10 @@ public class Player extends Objects {
 
     public void jump() {
         if(gravity == 0)
-            speed.y = 340;
+            speed.y = JUMP_SPD;
     }
+
+    public void tackle() {}
 
     public void plat(boolean onPl, int h) {
         if(onPl) {

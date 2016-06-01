@@ -45,29 +45,8 @@ public class GameState extends State {
 
         player = new Player(0, Runner.HEIGHT / 3 + 10);
 
-        //for swipes
-        Gdx.input.setInputProcessor(new ActionController(new ActionController.DirectionListener() {
-
-            @Override
-            public void onLeft() {
-
-            }
-
-            @Override
-            public void onRight() {
-
-            }
-
-            @Override
-            public void onUp() {
-                player.jump();
-            }
-
-            @Override
-            public void onDown() {
-
-            }
-        }, player));
+        /** for swipes */
+        Gdx.input.setInputProcessor(new ActionController(player));
     }
 
     public int getRand(int min, int max) {

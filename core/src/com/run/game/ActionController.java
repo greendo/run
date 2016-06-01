@@ -1,53 +1,69 @@
 package com.run.game;
 
-import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.Vector2;
 import com.run.game.sprites.Player;
 
 /**
  * Created by jc on 30.05.16.
  */
-public class ActionController extends GestureDetector {
+public class ActionController implements InputProcessor {
 
-    private static Player player;
+    private Vector2 position;
+    private Player player;
 
-    public interface DirectionListener {
-        void onLeft();
-
-        void onRight();
-
-        void onUp();
-
-        void onDown();
-    }
-
-    public ActionController(DirectionListener directionListener, Player player) {
-        super(new DirectionGestureListener(directionListener));
+    public ActionController(Player player) {
         this.player = player;
+        position = new Vector2();
     }
 
-    private static class DirectionGestureListener extends GestureAdapter {
-        DirectionListener directionListener;
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        position.x = screenX;
+        position.y = screenY;
+        return true;
+    }
 
-        public DirectionGestureListener(DirectionListener directionListener) {
-            this.directionListener = directionListener;
-        }
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        Vector2 valera = new Vector2(screenX, screenY);
 
-        @Override
-        public boolean fling(float velocityX, float velocityY, int button) {
-            if(Math.abs(velocityX) > Math.abs(velocityY)) {
-                if(velocityX > 0) {
-                    directionListener.onRight();
-                } else {
-                    directionListener.onLeft();
-                }
-            } else {
-                if(velocityY > 0) {
-                    directionListener.onDown();
-                } else {
-                    directionListener.onUp();
-                }
-            }
-            return super.fling(velocityX, velocityY, button);
-        }
+        if(valera.y < position.y)
+            player.jump();
+        if(valera.y > position.y)
+            player.tackle();
+
+        position.set(valera);
+        return true;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }
